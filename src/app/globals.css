@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+:root {
+  --background: #090a0f;
+  --foreground: #f8fafc;
+  --card-bg: rgba(17, 24, 39, 0.7);
+  --card-border: rgba(255, 255, 255, 0.08);
+  
+  --primary: 243 91% 62%; /* indigo */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 263 90% 60%; /* violet */
+  --secondary-foreground: 0 0% 100%;
+  
+  --accent: 316 70% 50%; /* pink */
+  
+  --success: 142 76% 45%; /* emerald */
+  --warning: 38 92% 50%;  /* amber */
+  --error: 346 87% 55%;   /* rose */
+  --info: 199 89% 48%;    /* sky */
+  
+  --muted: 215 20% 65%;
+  --muted-foreground: 215 16% 47%;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-card-border: var(--card-border);
+  
+  --color-indigo-custom: hsl(243, 91%, 62%);
+  --color-violet-custom: hsl(263, 90%, 60%);
+  --color-emerald-custom: hsl(142, 76%, 45%);
+  --color-rose-custom: hsl(346, 87%, 55%);
+  --color-amber-custom: hsl(38, 92%, 50%);
+  --color-sky-custom: hsl(199, 89%, 48%);
+  
+  --font-sans: 'Outfit', 'Inter', sans-serif;
+  
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in-up: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Base resets & utilities */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Glassmorphism custom components */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+}
+
+.glass-input {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.2s;
+}
+
+.glass-input:focus {
+  border-color: rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+/* Glowing text effects */
+.glow-text-primary {
+  text-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+}
+
+.glow-text-secondary {
+  text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 10, 15, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.4);
+}
+
+/* Grid overlay background */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
