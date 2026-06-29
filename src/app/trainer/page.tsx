@@ -345,6 +345,7 @@ export default function TrainerDashboard() {
     e.preventDefault();
     setIsSaving(true);
     setSuccessMessage("");
+    setErrorMessage("");
 
     try {
       await saveActivityScore(activeScoreActivityId, activeScoreStudentId, Number(activeScoreVal), activeScoreFeedback, user?.id || null);
@@ -364,6 +365,7 @@ export default function TrainerDashboard() {
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err: any) {
       console.warn("Failed to save activity score:", err?.message || String(err));
+      setErrorMessage("Failed to save activity score: " + err.message);
       setIsSaving(false);
     }
   };
@@ -373,6 +375,7 @@ export default function TrainerDashboard() {
     e.preventDefault();
     setIsSaving(true);
     setSuccessMessage("");
+    setErrorMessage("");
 
     try {
       await saveAssessmentScore(assScoreAssessmentId, assScoreStudentId, Number(assScoreVal), assScoreFeedback, user?.id || null);
@@ -392,6 +395,7 @@ export default function TrainerDashboard() {
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err: any) {
       console.warn("Failed to save assessment score:", err?.message || String(err));
+      setErrorMessage("Failed to save assessment score: " + err.message);
       setIsSaving(false);
     }
   };
@@ -402,6 +406,7 @@ export default function TrainerDashboard() {
     if (!fbText) return;
     setIsSaving(true);
     setSuccessMessage("");
+    setErrorMessage("");
 
     try {
       await saveSummaryFeedback(selectedWorkshopId, fbStudentId, fbText, user?.id || null);
@@ -417,6 +422,7 @@ export default function TrainerDashboard() {
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (err: any) {
       console.warn("Failed to save summary feedback:", err?.message || String(err));
+      setErrorMessage("Failed to save summary feedback: " + err.message);
       setIsSaving(false);
     }
   };
