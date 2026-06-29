@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 
+import ConnectionStatus from "@/components/ConnectionStatus";
+
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
@@ -29,8 +31,9 @@ export default function RootLayout({
       lang="en"
       className={`${outfit.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans text-slate-100 bg-[#090a0f]">
+      <body className="min-h-full flex flex-col font-sans text-slate-800 bg-[#f4f6fc]">
         {children}
+        <ConnectionStatus />
       </body>
     </html>
   );

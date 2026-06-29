@@ -5,9 +5,10 @@ interface DialogProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function Dialog({ isOpen, onClose, children }: DialogProps) {
+export function Dialog({ isOpen, onClose, children, className = "max-w-2xl" }: DialogProps) {
   React.useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -33,7 +34,7 @@ export function Dialog({ isOpen, onClose, children }: DialogProps) {
       />
       
       {/* Content Container */}
-      <div className="relative w-full max-w-2xl bg-[#11131e]/90 border border-white/10 rounded-2xl shadow-2xl p-6 z-10 animate-fade-in-up overflow-y-auto max-h-[90vh]">
+      <div className={`relative w-full ${className} bg-[#11131e]/90 border border-white/10 rounded-2xl shadow-2xl p-6 z-10 animate-fade-in-up overflow-y-auto max-h-[90vh]`}>
         {/* Close Button */}
         <button
           onClick={onClose}

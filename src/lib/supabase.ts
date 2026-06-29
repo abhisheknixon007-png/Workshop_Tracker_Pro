@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase as client } from '@/integrations/supabase/client';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -12,8 +12,4 @@ if (typeof window !== 'undefined' && useMockDb) {
   console.log('🔗 Live Workshop Tracker is running in SUPABASE mode.');
 }
 
-// Fallback to empty strings to prevent createClient from crashing if envs are missing
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-url.supabase.co',
-  supabaseAnonKey || 'placeholder-anon-key'
-);
+export const supabase = client;

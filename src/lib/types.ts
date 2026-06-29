@@ -12,6 +12,10 @@ export interface Profile {
   department?: string;
   academic_year?: string;
   created_at?: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  approved_by?: string | null;
+  approved_at?: string | null;
+  password?: string;
 }
 
 export type WorkshopStatus = 'draft' | 'active' | 'completed' | 'archived';

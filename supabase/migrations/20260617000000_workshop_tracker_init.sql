@@ -1,4 +1,5 @@
 -- SQL Schema for Live Workshop Progress & Assessment Tracker
+-- Migration: 20260617000000_workshop_tracker_init
 -- Designed for Supabase PostgreSQL
 
 -- Enable UUID extension if not enabled
@@ -14,7 +15,6 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     college_name TEXT,
     department TEXT,
     academic_year TEXT,
-    password TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     status TEXT NOT NULL CHECK (status IN ('Pending', 'Approved', 'Rejected')) DEFAULT 'Pending',
     approved_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS public.sessions (
     workshop_id UUID NOT NULL REFERENCES public.workshops(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     session_date DATE NOT NULL,
-    duration_mins INTEGER NOT NULL, -- duration in minutes
+    duration_mins INTEGER NOT NULL,
     description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -205,25 +205,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger function to synchronize password updates from profiles to auth.users
-CREATE OR REPLACE FUNCTION public.sync_profile_password_to_auth()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.password IS DISTINCT FROM OLD.password AND NEW.password IS NOT NULL THEN
-        UPDATE auth.users
-        SET encrypted_password = crypt(NEW.password, gen_salt('bf', 10))
-        WHERE id = NEW.id;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-DROP TRIGGER IF EXISTS on_profile_password_update ON public.profiles;
-CREATE TRIGGER on_profile_password_update
-    AFTER UPDATE OF password ON public.profiles
-    FOR EACH ROW
-    EXECUTE FUNCTION public.sync_profile_password_to_auth();
-
 -- ----------------------------------------------------
 -- Row Level Security (RLS) Enablement
 -- ----------------------------------------------------
@@ -276,19 +257,6 @@ CREATE POLICY "Allow admins full control of workshops" ON public.workshops
         public.is_admin(auth.uid())
     );
 
-DROP POLICY IF EXISTS "Allow trainers to manage their own workshops" ON public.workshops;
-DROP POLICY IF EXISTS "Allow trainers to insert workshops" ON public.workshops;
-
-CREATE POLICY "Allow trainers to insert workshops" ON public.workshops
-    FOR INSERT WITH CHECK (
-        public.is_trainer(auth.uid())
-    );
-
-CREATE POLICY "Allow trainers to manage their own workshops" ON public.workshops
-    FOR ALL USING (
-        trainer_id = auth.uid() OR (trainer_id IS NULL AND public.is_trainer(auth.uid()))
-    );
-
 -- Sessions policies
 DROP POLICY IF EXISTS "Allow authenticated read of sessions" ON public.sessions;
 CREATE POLICY "Allow authenticated read of sessions" ON public.sessions
@@ -298,15 +266,6 @@ DROP POLICY IF EXISTS "Allow admins full control of sessions" ON public.sessions
 CREATE POLICY "Allow admins full control of sessions" ON public.sessions
     FOR ALL USING (
         public.is_admin(auth.uid())
-    );
-
-DROP POLICY IF EXISTS "Allow trainers to manage sessions of their workshops" ON public.sessions;
-CREATE POLICY "Allow trainers to manage sessions of their workshops" ON public.sessions
-    FOR ALL USING (
-        EXISTS (
-            SELECT 1 FROM public.workshops w
-            WHERE w.id = workshop_id AND (w.trainer_id = auth.uid() OR (w.trainer_id IS NULL AND public.is_trainer(auth.uid())))
-        )
     );
 
 -- Enrollments policies
@@ -443,15 +402,6 @@ CREATE POLICY "Allow admins to manage rules" ON public.workshop_rules
         public.is_admin(auth.uid())
     );
 
-DROP POLICY IF EXISTS "Allow trainers to manage rules of their workshops" ON public.workshop_rules;
-CREATE POLICY "Allow trainers to manage rules of their workshops" ON public.workshop_rules
-    FOR ALL USING (
-        EXISTS (
-            SELECT 1 FROM public.workshops w
-            WHERE w.id = workshop_id AND (w.trainer_id = auth.uid() OR (w.trainer_id IS NULL AND public.is_trainer(auth.uid())))
-        )
-    );
-
 -- Certificates policies
 DROP POLICY IF EXISTS "Allow students to read their own certificates" ON public.certificates;
 CREATE POLICY "Allow students to read their own certificates" ON public.certificates
@@ -488,6 +438,7 @@ DROP POLICY IF EXISTS "Allow authenticated to write audit logs" ON public.audit_
 DROP POLICY IF EXISTS "Allow anyone to write audit logs" ON public.audit_logs;
 CREATE POLICY "Allow anyone to write audit logs" ON public.audit_logs
     FOR INSERT WITH CHECK (true);
+
 
 
 -- 15. Views for requested names to satisfy exact mapping (users, students, trainers)

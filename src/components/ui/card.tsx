@@ -7,10 +7,10 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Card({ className = "", glass = true, ...props }: CardProps) {
   return (
     <div
-      className={`rounded-xl overflow-hidden shadow-xl transition-all duration-300 ${
+      className={`rounded-2xl overflow-hidden shadow-sm transition-all duration-300 ${
         glass 
-          ? "glass-panel bg-opacity-40 backdrop-blur-md border border-white/5" 
-          : "bg-slate-900 border border-slate-800"
+          ? "bg-white/85 border border-slate-200/50 shadow-md" 
+          : "bg-white border border-slate-100 shadow-sm"
       } ${className}`}
       {...props}
     />
@@ -24,7 +24,7 @@ export function CardHeader({ className = "", ...props }: React.HTMLAttributes<HT
 export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={`text-xl font-semibold font-outfit tracking-wide text-white ${className}`}
+      className={`text-xl font-semibold font-outfit tracking-wide text-slate-850 ${className}`}
       {...props}
     />
   );
@@ -33,7 +33,7 @@ export function CardTitle({ className = "", ...props }: React.HTMLAttributes<HTM
 export function CardDescription({ className = "", ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <p
-      className={`text-sm text-slate-400 mt-1 font-sans ${className}`}
+      className={`text-sm text-slate-500 mt-1 font-sans ${className}`}
       {...props}
     />
   );
@@ -46,7 +46,7 @@ export function CardContent({ className = "", ...props }: React.HTMLAttributes<H
 export function CardFooter({ className = "", ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`p-6 pt-0 flex items-center border-t border-white/5 mt-4 ${className}`}
+      className={`p-6 pt-0 flex items-center border-t border-slate-100 mt-4 ${className}`}
       {...props}
     />
   );
